@@ -4,6 +4,7 @@
 package com.flipkart.restcontroller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,16 +74,31 @@ public class StudentRestAPI {
 	 */
 	
 	@POST
-	@Path("/registerCourses")
+	@Path("/registerCourses/{c1}/{c2}/{c3}/{c4}/{c5}/{c6}/{studentId}")
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response registerCourses(List<String> courseList, 
+	public Response registerCourses(
+			@PathParam("c1") String c1,
+			@PathParam("c2") String c2,
+			@PathParam("c3") String c3,
+			@PathParam("c4") String c4,
+			@PathParam("c5") String c5,
+			@PathParam("c6") String c6,
 			@NotNull
-			@QueryParam("studentId") String studentId)	throws ValidationException, SQLException{
+			@PathParam("studentId") String studentId)	throws ValidationException, SQLException{
 						
 		try
 		{
 			List<Course> availableCourseList = registrationInterface.viewCourses(studentId);
+			List<String> courseList = new ArrayList<String>();
+			
+			courseList.add(c1);
+			courseList.add(c2);
+			courseList.add(c3);
+			courseList.add(c4);
+			courseList.add(c5);
+			courseList.add(c6);
+			
 			Set<String> hash_set = new HashSet<String>();
 			
 			for(String courseCode:courseList) {
@@ -119,16 +135,15 @@ public class StudentRestAPI {
 	 * @throws SQLException 
 	 */
 	@PUT
-	@Path("/addCourse")
+	@Path("/addCourse/{courseCode}/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addCourse(
 			@NotNull
-			@Size(min = 4 , max = 10, message = "Course Code length should be between 4 and 10 character")
-			@QueryParam("courseCode") String courseCode,
+			
+			@PathParam("courseCode") String courseCode,
 			@NotNull
-			@Min(value = 1, message = "Student ID should not be less than 1")
-			@Max(value = 9999, message = "Student ID should be less than 1000")
-			@QueryParam("studentId") String studentId) throws ValidationException, SQLException{
+			
+			@PathParam("studentId") String studentId) throws ValidationException, SQLException{
 		
 
 		if(registrationInterface.getRegistrationStatus(studentId) == false)
@@ -153,16 +168,15 @@ public class StudentRestAPI {
 	 * @throws SQLException 
 	 */
 	@DELETE
-	@Path("/dropCourse")
+	@Path("/dropCourse/{courseCode}/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response dropCourse(
 			@NotNull
-			@Size(min = 4 , max = 10 , message = "Course Code length should be between 4 and 10 character")
-			@QueryParam("courseCode") String courseCode,
+			
+			@PathParam("courseCode") String courseCode,
 			@NotNull
-			@Min(value = 1, message = "Student ID should not be less than 1")
-			@Max(value = 9999, message = "Student ID should be less than 1000")
-			@QueryParam("studentId") String studentId) throws ValidationException, SQLException{
+			
+			@PathParam("studentId") String studentId) throws ValidationException, SQLException{
 		
 		
 
